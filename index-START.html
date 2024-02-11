@@ -59,7 +59,30 @@
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
 <script>
+  function playSound(e){
+    const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`);  // this gives us the audio element that is connected to the keyCode
+    const key = document.querySelector(`.key[data-key="${e.keyCode}"]`);     // this gives us the key element that is pressed on the screen
 
+    if(!audio) return;  //  If the entered key is not specified with an audio, the function will end in its entirety
+
+    //  1.  To make the audio play
+    audio.currentTime = 0;  //  This makes the audio file start from 00:00 whenever the key is pressed
+    audio.play();   //  Start the playing of the audio
+
+    //  2.  To start the animation happen
+    key.classList.add('playing');
+  }
+
+  //  To close the transition, we first need to add an event listener which triggers at the end of a transition, then we stop the animation
+  
+  function removeTransition(e){
+    if(e.propertyName !== 'transform') return;  //  skip is the transition is anything except transform, hence basically we are detecting the ("end of transform event")
+    this.classList.remove('playing');
+  }
+
+  const keys = document.querySelectorAll('.key')  //  Bring out all the keys together
+  keys.forEach(key => key.addEventListener('transitionend' , removeTransition));
+  window.addEventListener('keydown' , playSound);
 </script>
 
 
